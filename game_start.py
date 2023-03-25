@@ -4,7 +4,7 @@ pygame.init()
 score = 0
 font = pygame.font.Font("C:/mingliu.ttc", 20)
 font1 = pygame.font.Font("C:/mingliu.ttc", 32)
-screen = pygame.display.set_mode((600, 400))
+screen = pygame.display.set_mode((600, 640))
 pygame.display.set_caption("打磚塊遊戲")
 background = pygame.Surface(screen.get_size())
 background = background.convert()
@@ -25,7 +25,7 @@ while Running:
 
     if not playing:
         message = font.render(message_start, 1, (255,0,255))
-        screen.blit(message, (screen.get_width()/2-100, screen.get_height()-20))
+        screen.blit(message, (screen.get_width()/2-100, screen.get_height()/2))
         pygame.display.update()
     else:
         allsprite.update()
