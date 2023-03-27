@@ -5,8 +5,8 @@ class Ball(pygame.sprite.Sprite):
     dy = 0  #y位移
     x = 0  #球x坐標
     y = 0  #球y坐標
-    direction = 0
-    speed = 0
+    direction = 0  #球移動方向
+    speed = 0  #球移動速度
  
     def __init__(self, sp, srx, sry, radium, color):
         pygame.sprite.Sprite.__init__(self)
@@ -78,6 +78,7 @@ def gameover(message):  #結束程式
     running = False  #結束程式
 
 pygame.init()
+score = 0  #得分
 font = pygame.font.Font("C:/mingliu.ttc", 20)  #下方訊息字體
 font1 = pygame.font.Font("C:/mingliu.ttc", 32)  #結束程式訊息字體
 screen = pygame.display.set_mode((600, 400))
@@ -88,12 +89,12 @@ background.fill((255,255,255))
 allsprite = pygame.sprite.Group()  #建立全部角色群組
 bricks = pygame.sprite.Group()  #建立磚塊角色群組
 ball = Ball(15, 300, 350, 10, (0,0,0))  #建立黑色球物件
-allsprite.add(ball)
+allsprite.add(ball)  #加入全部角色群組
 pad = Pad()
 allsprite.add(pad)
 clock = pygame.time.Clock()
-for row in range(0, 4):  #行數
-    for column in range(0, 15):  #列數
+for row in range(0, 4):  #列數
+    for column in range(0, 15):  #行數
         if row == 0:
             brick = Brick((0,0,139), column * 40 + 1, row * 16 + 1)
         if row == 1:
@@ -102,7 +103,7 @@ for row in range(0, 4):  #行數
             brick = Brick((65,105,225), column * 40 + 1, row * 16 + 1)
         if row == 3:
             brick = Brick((100,149,237), column * 40 + 1, row * 16 + 1)
-        bricks.add(brick) 
+        bricks.add(brick)
         allsprite.add(brick)
 msgstr = "按滑鼠左鍵開始遊戲！"  #起始訊息
 playing = False  #開始時球不會移動
@@ -115,10 +116,24 @@ while running:
     buttons = pygame.mouse.get_pressed()
     if buttons[0]:  #按滑鼠左鍵後球可移動
         playing = True
-    if playing == True:  #遊戲中
+    if playing == True:  #遊戲進行中
         screen.blit(background, (0,0))  #清除繪圖視窗
         fail = ball.update()  #移動球體
-        allsprite.draw(screen)  #繪製所有角色
+        if fail:  #球出界
+            gameover("Game over")
+        pad.update()
+        hitbrick = pygame.sprite.spritecollide(ball, bricks, True)  #檢查球和磚塊碰撞
+        if len(hitbrick) > 0:
+            score += len(hitbrick)
+            ball.rect.y += 20
+            ball.bounceup()
+            if len(bricks) == 0:
+                gameover("You Win!")
+        hitpad = pygame.sprite.collide_rect(ball, pad)  #檢查球和滑板碰撞
+        if hitpad:
+            ball.bounceup()
+        allsprite.draw(screen)
+        msgstr = "得分：" + str(score)
     msg = font.render(msgstr, 1, (255,0,255))
     screen.blit(msg, (screen.get_width()/2-60,screen.get_height()-20))  #繪製訊息
     pygame.display.update()
