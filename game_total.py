@@ -81,6 +81,8 @@ pygame.init()
 score = 0  #得分
 font = pygame.font.Font("C:/mingliu.ttc", 20)  #下方訊息字體
 font1 = pygame.font.Font("C:/mingliu.ttc", 32)  #結束程式訊息字體
+soundhit = pygame.mixer.Sound("hit.wav")  #接到磚塊音效
+soundpad = pygame.mixer.Sound("pad.wav")  #接到滑板音效
 screen = pygame.display.set_mode((600, 400))
 pygame.display.set_caption("打磚塊遊戲")
 background = pygame.Surface(screen.get_size())
@@ -125,12 +127,14 @@ while running:
         hitbrick = pygame.sprite.spritecollide(ball, bricks, True)  #檢查球和磚塊碰撞
         if len(hitbrick) > 0:
             score += len(hitbrick)
+            soundhit.play()  #球撞磚塊聲
             ball.rect.y += 20
             ball.bounceup()
             if len(bricks) == 0:
                 gameover("You Win!")
         hitpad = pygame.sprite.collide_rect(ball, pad)  #檢查球和滑板碰撞
         if hitpad:
+            soundpad.play()  #球撞滑板聲
             ball.bounceup()
         allsprite.draw(screen)
         msgstr = "得分：" + str(score)
