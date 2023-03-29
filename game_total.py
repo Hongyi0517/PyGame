@@ -57,7 +57,7 @@ class Brick(pygame.sprite.Sprite):  #磚塊角色
 class Pad(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("board.png")
+        self.image = pygame.image.load("pad.png")
         self.image.convert()
         self.rect = self.image.get_rect()
         self.rect.x = int((screen.get_width() - self.rect.width)/2)  #滑板位置
